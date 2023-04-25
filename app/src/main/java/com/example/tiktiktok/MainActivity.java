@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
@@ -24,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
 
     Button goToSettingsButton;
+    Switch trackingSwitch;
+    TextView timeView;
+
+    boolean trackingAllowed = false;
+
+    long stoppingTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +41,27 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
+        timeView = (TextView) findViewById(R.id.timeView);
+        timeView.setText("Hello There Motherfucker");
+        trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            boolean isChecked = trackingSwitch.isChecked();
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    startTracking();
+                    timeView.setText("is checked");
+                } else {
+                    trackingAllowed = false;
+                }
+            }
+        });
+
+
+        /**
+         * Changing to the settings menu
+         */
         goToSettingsButton = findViewById(R.id.goToSettingsButton);
         goToSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * was automatically added by android studio. Don't know what it is.
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -48,8 +83,18 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * Method for switching to the settings menu
+     */
     private void switchActivities() {
         Intent switchActivityIntent = new Intent(this, SettingsActivity.class);
         startActivity(switchActivityIntent);
+    }
+
+    /**
+     * start tracking the video content
+     */
+    private void startTracking() {
+
     }
 }
