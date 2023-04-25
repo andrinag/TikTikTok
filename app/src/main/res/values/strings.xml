@@ -17,4 +17,32 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_main">MainActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="lorem_ipsum">
+        Start Video Tracking:
+    </string>
+    <string name="main_screen">
+        ThIS iS tHe öGly Main ScreEn
+    </string>
+    <string name="settings">
+        Go to Settings
+    </string>
+    <string name="blockable_apps">
+        Monitored Apps
+    </string>
+    <string name="tikTok">
+        TikTok
+    </string>
+    <string name="instagram">
+        Instagram
+    </string>
+    <string name="youTube">
+        Youtube
+    </string>
 </resources>
