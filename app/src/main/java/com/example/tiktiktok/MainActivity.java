@@ -71,18 +71,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                startTracking();
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    });
-
+                    trackingAllowed = true;
+                    startTracking();
                     timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
@@ -132,13 +122,8 @@ public class MainActivity extends AppCompatActivity {
     /**
      * start tracking the video content
      */
-    private void startTracking() throws InterruptedException {
-        while(trackingSwitch.isChecked()) {
-            /*System.out.println("HELLO");
-            TimeUnit.SECONDS.sleep(1);
-            System.out.println("TEST");
-            TimeUnit.SECONDS.sleep(1);*/
-        }
+    private void startTracking() {
+        System.out.println("start tracking");
     }
 
 }
