@@ -1,18 +1,24 @@
 package com.example.tiktiktok;
 
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.core.view.GestureDetectorCompat;
 import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,6 +26,12 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.tiktiktok.databinding.ActivityMainBinding;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
     long stoppingTime;
 
+    private GestureDetectorCompat mDetector;
+
+    public MainActivity() throws FileNotFoundException {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +58,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // used for detecting scrolling
+        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
+
         timeView = (TextView) findViewById(R.id.timeView);
         timeView.setText("Hello There Motherfucker");
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -50,14 +71,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    startTracking();
+
+                    AsyncTask.execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                startTracking();
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    });
+
                     timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
                 }
             }
         });
-
 
         /**
          * Changing to the settings menu
@@ -71,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        if (this.mDetector.onTouchEvent(event)) {
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
 
     /**
      * was automatically added by android studio. Don't know what it is.
@@ -94,7 +132,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * start tracking the video content
      */
-    private void startTracking() {
-
+    private void startTracking() throws InterruptedException {
+        while(trackingSwitch.isChecked()) {
+            /*System.out.println("HELLO");
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println("TEST");
+            TimeUnit.SECONDS.sleep(1);*/
+        }
     }
+
 }
