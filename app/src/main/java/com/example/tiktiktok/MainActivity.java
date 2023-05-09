@@ -60,12 +60,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // asks the user which apps to give overlay permission
-        if (!Settings.canDrawOverlays(this)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-            startActivityForResult(intent, 0);
-        }
-
         // used for detecting scrolling
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
@@ -135,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void runInBackground(int seconds) {
-        this.device.runAppInBackground(seconds);
+        // this.device.runAppInBackground(seconds);
     }
 
 }
