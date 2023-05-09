@@ -2,6 +2,7 @@ package com.example.tiktiktok;
 
 import android.content.Intent;
 import android.gesture.Gesture;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     Switch trackingSwitch;
     TextView timeView;
 
-    boolean trackingAllowed = false;
+    public static boolean trackingAllowed = false;
 
     long stoppingTime;
 
@@ -57,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // asks the user which apps to give overlay permission
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, 0);
+        }
 
         // used for detecting scrolling
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
@@ -124,6 +132,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startTracking() {
         System.out.println("start tracking");
+    }
+
+    public void runInBackground(int seconds) {
+        this.device.runAppInBackground(seconds);
     }
 
 }
