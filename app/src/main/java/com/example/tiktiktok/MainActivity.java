@@ -55,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
     int tiktokTimer;
     int instagramTimer;
 
+    public static int firstWarning = 15;
+    public static int secondWarning = 50;
+    public static int thirdWarning = 75;
+    public static int fourthWarning = 100;
+
     boolean trackingAllowed = false;
 
     private GestureDetectorCompat mDetector;
@@ -163,6 +168,17 @@ public class MainActivity extends AppCompatActivity {
                     } else if (currentApp.equals(instagram)) {
                         instagramTimer += 5;
                         System.out.println("INSTAGRAM: " + instagramTimer);
+                    }
+
+                    // CONSEQUENCES
+                    if (youtubeTimer == firstWarning || instagramTimer == firstWarning || tiktokTimer == firstWarning) {
+                        // methode ufrüefe
+                    } else if (youtubeTimer == secondWarning || instagramTimer == secondWarning || tiktokTimer == secondWarning) {
+                        // methode
+                    } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
+                        // methode
+                    } else if (youtubeTimer == fourthWarning || instagramTimer == fourthWarning || tiktokTimer == fourthWarning) {
+                        // methode
                     }
                 }
 
