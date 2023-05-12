@@ -148,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startTracking() {
         String yt = "com.google.android.youtube";
-        String tiktok = "TO DO";
-        String instagram = "au to DO";
+        String tiktok = "com.zhiliaoapp.musically";
+        String instagram = "com.instagram.android";
 
         // checks every 5 seconds which app has been opened the longest in the last 5 seconds
         runnable = new Runnable() {
