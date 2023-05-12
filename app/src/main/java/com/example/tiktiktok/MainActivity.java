@@ -95,11 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) {
                     trackingAllowed = true;
 
-                        startTracking();
+                    startTracking();
                     timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
-                    handler.removeCallbacks(runnable);
+                    handler.removeCallbacks(runnable);      // thread oder wases esch abschalte
                 }
             }
         });
@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
      * start tracking the video content
      */
     private void startTracking() {
+        String yt = "com.google.android.youtube";
+        String tiktok = "TO DO";
+        String instagram = "au to DO";
 
         // checks every 5 seconds which app has been opened the longest in the last 5 seconds
         runnable = new Runnable() {
@@ -155,14 +158,18 @@ public class MainActivity extends AppCompatActivity {
                 currentApp = ForegroundAppChecker.getForegroundApp(context);     // calls the method which checks usage in last 5 seconds
 
                 System.out.println("MOMENTAN: " + currentApp);
-                String yt = "com.google.android.youtube";
 
                 // depending on which app is currently used a timer will be increased
-
                 if (currentApp != null) {
                     if (currentApp.equals(yt)) {
                         youtubeTimer += 5;
                         System.out.println("YOUTUBE: " + youtubeTimer);
+                    } else if (currentApp.equals(tiktok)) {
+                        tiktokTimer += 5;
+                        System.out.println("TIKTOK: " + tiktokTimer);
+                    } else if (currentApp.equals(instagram)) {
+                        instagramTimer += 5;
+                        System.out.println("INSTAGRAM: " + instagramTimer);
                     }
                 }
 
