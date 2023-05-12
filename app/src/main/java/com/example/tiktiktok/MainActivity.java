@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.example.tiktiktok.databinding.ActivityMainBinding;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        System.out.println("TEST");
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -72,7 +76,11 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     trackingAllowed = true;
-                    startTracking();
+                    try {
+                        startTracking();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
@@ -122,8 +130,16 @@ public class MainActivity extends AppCompatActivity {
     /**
      * start tracking the video content
      */
-    private void startTracking() {
-        System.out.println("start tracking");
+    private void startTracking() throws InterruptedException {
+
+        /*System.out.println("start tracking");
+        for (int i = 0; i < 10; i++) {
+            ForegroundAppChecker.getForegroundApp(this);
+            Thread.sleep(5000);
+        }*/
+
+        ForegroundAppChecker.getForegroundApp(this);
+
     }
 
 }
