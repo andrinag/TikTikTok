@@ -1,13 +1,20 @@
 package com.example.tiktiktok;
 
+import android.app.AppOpsManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.Context;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -21,8 +28,11 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.tiktiktok.databinding.ActivityMainBinding;
 
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
+    // private static final int MY_PERMISSIONS_REQUEST_PACKAGE_USAGE_STATS;
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
@@ -33,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     boolean trackingAllowed = false;
 
     long stoppingTime;
+    private long startMillis;
+    private long endMillis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
         timeView = (TextView) findViewById(R.id.timeView);
         timeView.setText("Hello There Motherfucker");
+        super.getApplication().registerActivityLifecycleCallbacks(new TrackedTime());
+        System.out.println("Starts Tracking");
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = trackingSwitch.isChecked();
 
@@ -95,6 +109,5 @@ public class MainActivity extends AppCompatActivity {
      * start tracking the video content
      */
     private void startTracking() {
-
     }
 }
