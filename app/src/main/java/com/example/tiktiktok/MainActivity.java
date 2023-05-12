@@ -57,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     boolean trackingAllowed = false;
 
-    long stoppingTime;
-
     private GestureDetectorCompat mDetector;
 
     public MainActivity() throws FileNotFoundException {
@@ -74,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
 
-        // used for detecting scrolling
-        mDetector = new GestureDetectorCompat(this, new MyGestureListener());
-
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
 
         handler = new Handler();
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         currentApp = "nothing";
 
         timeView = (TextView) findViewById(R.id.timeView);
-        timeView.setText("Hello There Motherfucker");
+        timeView.setText("Click for starting the Timer");
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = trackingSwitch.isChecked();
 
@@ -94,9 +89,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     trackingAllowed = true;
-
                     startTracking();
-                    timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
                     handler.removeCallbacks(runnable);      // thread oder wases esch abschalte
@@ -178,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         handler.postDelayed(runnable, 5000);        //
-
     }
 
 }
