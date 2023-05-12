@@ -1,5 +1,6 @@
 package com.example.tiktiktok;
 
+import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.os.AsyncTask;
@@ -40,9 +41,19 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    private Handler handler;
+    private Runnable runnable;
+
+    private Context context;
+
     Button goToSettingsButton;
     Switch trackingSwitch;
     TextView timeView;
+
+    String currentApp;
+    int youtubeTimer;
+    int tiktokTimer;
+    int instagramTimer;
 
     boolean trackingAllowed = false;
 
@@ -57,15 +68,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("TEST");
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        context = this;
 
         // used for detecting scrolling
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
+
+        handler = new Handler();
+        youtubeTimer = 0;
+        tiktokTimer = 0;
+        instagramTimer = 0;
+        currentApp = "nothing";
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeView.setText("Hello There Motherfucker");
@@ -76,14 +94,12 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     trackingAllowed = true;
-                    try {
+
                         startTracking();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     timeView.setText("is checked");
                 } else {
                     trackingAllowed = false;
+                    handler.removeCallbacks(runnable);
                 }
             }
         });
@@ -130,15 +146,31 @@ public class MainActivity extends AppCompatActivity {
     /**
      * start tracking the video content
      */
-    private void startTracking() throws InterruptedException {
+    private void startTracking() {
 
-        /*System.out.println("start tracking");
-        for (int i = 0; i < 10; i++) {
-            ForegroundAppChecker.getForegroundApp(this);
-            Thread.sleep(5000);
-        }*/
+        // checks every 5 seconds which app has been opened the longest in the last 5 seconds
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                currentApp = ForegroundAppChecker.getForegroundApp(context);     // calls the method which checks usage in last 5 seconds
 
-        ForegroundAppChecker.getForegroundApp(this);
+                System.out.println("MOMENTAN: " + currentApp);
+                String yt = "com.google.android.youtube";
+
+                // depending on which app is currently used a timer will be increased
+
+                if (currentApp != null) {
+                    if (currentApp.equals(yt)) {
+                        youtubeTimer += 5;
+                        System.out.println("YOUTUBE: " + youtubeTimer);
+                    }
+                }
+
+                handler.postDelayed(this, 5000);
+            }
+        };
+
+        handler.postDelayed(runnable, 5000);        //
 
     }
 
