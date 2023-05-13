@@ -57,18 +57,27 @@ public class MainActivity extends AppCompatActivity {
     TextView timeView;
 
     String currentApp;
+
+    // ------------------------------------------------- //
+    // timers for how long the apps have been in use     //
+    // ------------------------------------------------- //
     int youtubeTimer;
     int tiktokTimer;
     int instagramTimer;
+    // ------------------------------------------------- //
 
+
+    // ------------------------------------------------- //
+    // time limits when the warnings are being executed
+    // ------------------------------------------------- //
     public static int firstWarning = 15;
     public static int secondWarning = 50;
     public static int thirdWarning = 75;
     public static int fourthWarning = 100;
+    // ------------------------------------------------- //
+
 
     boolean trackingAllowed = false;
-
-    private GestureDetectorCompat mDetector;
 
     public MainActivity() throws FileNotFoundException {
     }
@@ -76,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -124,15 +132,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-        if (this.mDetector.onTouchEvent(event)) {
-            return true;
-        }
-        return super.onTouchEvent(event);
-    } */
-
     /**
      * was automatically added by android studio. Don't know what it is.
      * @return
@@ -166,7 +165,11 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 currentApp = ForegroundAppChecker.getForegroundApp(context);     // calls the method which checks usage in last 5 seconds
 
+                // ---------------------------------------------- //
+                // USED FOR TESTING
+                // ---------------------------------------------- //
                 System.out.println("MOMENTAN: " + currentApp);
+                // ---------------------------------------------- //
 
                 // depending on which app is currently used a timer will be increased
                 if (currentApp != null) {
@@ -183,16 +186,27 @@ public class MainActivity extends AppCompatActivity {
 
                     // CONSEQUENCES
                     if (youtubeTimer == firstWarning || instagramTimer == firstWarning || tiktokTimer == firstWarning) {
-                        // methode ufrüefe
-                        // showPopup(R.layout.first_warning);
+                        // showing a warning popup
                         createOverlay(R.layout.first_warning);
                         System.out.println("LIMIT ERREICHT");
                     } else if (youtubeTimer == secondWarning || instagramTimer == secondWarning || tiktokTimer == secondWarning) {
-                        // methode
+                        // showing a warning popup
+                        createOverlay(R.layout.second_warning);
+
+                        // additional actions: ...
+                        // TODO
                     } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
-                        // methode
+                        // showing a warning popup
+                        createOverlay(R.layout.third_warning);
+
+                        // additional actions ...
+                        // TODO
                     } else if (youtubeTimer == fourthWarning || instagramTimer == fourthWarning || tiktokTimer == fourthWarning) {
-                        // methode
+                        // showing a warning popup
+                        createOverlay(R.layout.fourth_warning);
+
+                        // additional actions ...
+                        // TODO
                     }
                 }
 
@@ -203,7 +217,10 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(runnable, 5000);        //
     }
 
-    // method to ask user to grant the Overlay permission
+    /**
+     * asks for permission to draw over other apps if it's not already given
+     * is called when the app is first launcher
+     */
     public void checkOverlayPermission(){
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -217,24 +234,10 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Takes an xml file and creates a popup out of it
-     * only works inside of the app lmao rip
-     * @param layoutResId Takes an xml as follow: R.layout.xml_name
+     * pop up will also be displayed over other apps
+     * button in the overlay (id must be window_close) gets assigned as an exit button
+     * @param layoutResId usage: createOverlay(R.layout.xml_name)
      */
-    private void showPopup(int layoutResId) {
-        // Inflate the layout for the pop-up
-        View popupView = getLayoutInflater().inflate(layoutResId, null);
-
-        // Create the alert dialog builder
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-        // Set the custom layout to the alert dialog builder
-        alertDialogBuilder.setView(popupView);
-
-        // Create and show the alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
     private void createOverlay(int layoutResId) {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
