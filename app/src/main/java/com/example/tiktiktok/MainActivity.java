@@ -1,9 +1,12 @@
 package com.example.tiktiktok;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
+import android.graphics.PixelFormat;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -12,9 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
+import android.provider.Settings;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -75,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // used for the AppChecker
         context = this;
+
+        // checks if the permission has been given to display things over other apps
+        checkOverlayPermission();
 
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
 
@@ -114,13 +124,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
     @Override
     public boolean onTouchEvent(MotionEvent event){
         if (this.mDetector.onTouchEvent(event)) {
             return true;
         }
         return super.onTouchEvent(event);
-    }
+    } */
 
     /**
      * was automatically added by android studio. Don't know what it is.
@@ -173,6 +184,9 @@ public class MainActivity extends AppCompatActivity {
                     // CONSEQUENCES
                     if (youtubeTimer == firstWarning || instagramTimer == firstWarning || tiktokTimer == firstWarning) {
                         // methode ufrüefe
+                        // showPopup(R.layout.first_warning);
+                        createOverlay(R.layout.first_warning);
+                        System.out.println("LIMIT ERREICHT");
                     } else if (youtubeTimer == secondWarning || instagramTimer == secondWarning || tiktokTimer == secondWarning) {
                         // methode
                     } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
@@ -187,6 +201,66 @@ public class MainActivity extends AppCompatActivity {
         };
 
         handler.postDelayed(runnable, 5000);        //
+    }
+
+    // method to ask user to grant the Overlay permission
+    public void checkOverlayPermission(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                // send user to the device settings
+                Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                startActivity(myIntent);
+            }
+        }
+    }
+
+    /**
+     * Takes an xml file and creates a popup out of it
+     * only works inside of the app lmao rip
+     * @param layoutResId Takes an xml as follow: R.layout.xml_name
+     */
+    private void showPopup(int layoutResId) {
+        // Inflate the layout for the pop-up
+        View popupView = getLayoutInflater().inflate(layoutResId, null);
+
+        // Create the alert dialog builder
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // Set the custom layout to the alert dialog builder
+        alertDialogBuilder.setView(popupView);
+
+        // Create and show the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void createOverlay(int layoutResId) {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+
+        WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        View overlayView = LayoutInflater.from(this).inflate(layoutResId, null);
+
+        windowManager.addView(overlayView, params);
+
+        // Find the close button in the xml
+        Button closeButton = overlayView.findViewById(R.id.window_close);
+
+        // Set click listener for the close button
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Remove the overlay view from the window manager
+                windowManager.removeView(overlayView);
+            }
+        });
     }
 
 }
