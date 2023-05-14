@@ -2,11 +2,13 @@ package com.example.tiktiktok;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -53,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private Runnable runnable;
 
     private Context context;
+    private boolean fullBrightness = false;
 
     Button goToSettingsButton;
     Switch trackingSwitch;
@@ -73,13 +77,16 @@ public class MainActivity extends AppCompatActivity {
     // time limits when the warnings are being executed
     // ------------------------------------------------- //
     public static int firstWarning = 10;
-    public static int secondWarning = 15;
-    public static int thirdWarning = 20;
-    public static int fourthWarning = 40;
+    public static int secondWarning = 25;
+    public static int thirdWarning = 45;
+    public static int fourthWarning = 100;
 
     public static int thirdWarningIgnored = thirdWarning + 5;
 
     public static int fourthWarningIgnored = fourthWarning + 5;
+
+    private int brightness;
+
     // ------------------------------------------------- //
 
 
@@ -169,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                currentApp = ForegroundAppChecker.getForegroundApp(context);     // calls the method which checks usage in last 5 seconds
+                currentApp = ForegroundAppChecker.getForegroundApp(context);
+                // calls the method which checks usage in last 5 seconds
 
                 // ---------------------------------------------- //
                 // USED FOR TESTING
@@ -194,31 +202,56 @@ public class MainActivity extends AppCompatActivity {
                     if (youtubeTimer == firstWarning || instagramTimer == firstWarning || tiktokTimer == firstWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.first_warning);
-                        System.out.println("LIMIT ERREICHT");
+
                     } else if (youtubeTimer == secondWarning || instagramTimer == secondWarning || tiktokTimer == secondWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.second_warning);
 
-                        // additional actions: ...
-                        // TODO
+                        // changing the screen brightness to full
+                        setScreenBrightness(0);
+                        fullBrightness = true;
+
                     } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.third_warning);
                         takeAwaySound();
-                    } else if (youtubeTimer >= thirdWarningIgnored && youtubeTimer < fourthWarning && currentApp.equals(yt)
-                            || instagramTimer >= thirdWarningIgnored && instagramTimer < fourthWarning && currentApp.equals(instagram)||
-                            tiktokTimer >= thirdWarningIgnored && tiktokTimer < fourthWarning && currentApp.equals(tiktok)) {
-                        // if they keep turning off the sound, the sound will be turned off every 5s
-                        takeAwaySound();
+
                     } else if (youtubeTimer == fourthWarning || instagramTimer == fourthWarning || tiktokTimer == fourthWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.fourth_warning);
+
                     } else if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt)
                             || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram)
                             || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok)) {
                         // If they keep ignoring the fourth warning and stay on the app, the warning keeps showing up every 5s
                         createOverlay(R.layout.app_block_layover);
                     }
+
+                    // ---------------------------------------------------------------------------------------- //
+                    // if statements which have to be checked separately each time since they happen repeatedly
+                    // ---------------------------------------------------------------------------------------- //
+
+                    // ADJUSTING SCREEN BRIGHTNESS
+                    if (youtubeTimer >= secondWarning && currentApp.equals(yt)
+                            || instagramTimer >= secondWarning && currentApp.equals(instagram)
+                            || tiktokTimer >= secondWarning && currentApp.equals(tiktok)) {
+                        // changes the brightness to either full or max brightness every 5 seconds
+                        if (fullBrightness) {
+                            setScreenBrightness(0);
+                            fullBrightness = false;
+                        } else {
+                            setScreenBrightness(255);
+                            fullBrightness = true;
+                        }
+                    }
+                    // TAKING AWAY SOUND
+                    if (youtubeTimer >= thirdWarningIgnored && youtubeTimer < fourthWarning && currentApp.equals(yt)
+                            || instagramTimer >= thirdWarningIgnored && instagramTimer < fourthWarning && currentApp.equals(instagram)||
+                            tiktokTimer >= thirdWarningIgnored && tiktokTimer < fourthWarning && currentApp.equals(tiktok)) {
+                        // if they keep turning off the sound, the sound will be turned off every 5s
+                        takeAwaySound();
+                    }
+
                 }
 
                 handler.postDelayed(this, 5000);
@@ -300,4 +333,36 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+    public void setScreenBrightness(int brightnessValue) {
+        ContentResolver contentResolver = getContentResolver();
+        Window window = getWindow();
+
+        if (Settings.System.canWrite(this)) {
+            // For Android 6.0 and later
+            writeBrightnessSettings(contentResolver, brightnessValue);
+            applyBrightness(window, brightnessValue);
+        } else {
+            // Request the WRITE_SETTINGS permission
+            requestWriteSettingsPermission();
+        }
+    }
+
+    private void writeBrightnessSettings(ContentResolver contentResolver, int brightnessValue) {
+        Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+        Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, brightnessValue);
+    }
+
+    private void applyBrightness(Window window, int brightnessValue) {
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.screenBrightness = brightnessValue / 255f;
+        window.setAttributes(layoutParams);
+    }
+
+    private void requestWriteSettingsPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+        intent.setData(Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+    }
 }
