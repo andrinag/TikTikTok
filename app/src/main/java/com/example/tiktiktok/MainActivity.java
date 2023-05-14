@@ -1,10 +1,12 @@
 package com.example.tiktiktok;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -70,10 +72,14 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------- //
     // time limits when the warnings are being executed
     // ------------------------------------------------- //
-    public static int firstWarning = 15;
-    public static int secondWarning = 50;
-    public static int thirdWarning = 75;
-    public static int fourthWarning = 100;
+    public static int firstWarning = 10;
+    public static int secondWarning = 15;
+    public static int thirdWarning = 20;
+    public static int fourthWarning = 40;
+
+    public static int thirdWarningIgnored = thirdWarning + 5;
+
+    public static int fourthWarningIgnored = fourthWarning + 5;
     // ------------------------------------------------- //
 
 
@@ -198,15 +204,20 @@ public class MainActivity extends AppCompatActivity {
                     } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.third_warning);
-
-                        // additional actions ...
-                        // TODO
+                        takeAwaySound();
+                    } else if (youtubeTimer >= thirdWarningIgnored && youtubeTimer < fourthWarning && currentApp.equals(yt)
+                            || instagramTimer >= thirdWarningIgnored && instagramTimer < fourthWarning && currentApp.equals(instagram)||
+                            tiktokTimer >= thirdWarningIgnored && tiktokTimer < fourthWarning && currentApp.equals(tiktok)) {
+                        // if they keep turning off the sound, the sound will be turned off every 5s
+                        takeAwaySound();
                     } else if (youtubeTimer == fourthWarning || instagramTimer == fourthWarning || tiktokTimer == fourthWarning) {
                         // showing a warning popup
                         createOverlay(R.layout.fourth_warning);
-
-                        // additional actions ...
-                        // TODO
+                    } else if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt)
+                            || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram)
+                            || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok)) {
+                        // If they keep ignoring the fourth warning and stay on the app, the warning keeps showing up every 5s
+                        createOverlay(R.layout.app_block_layover);
                     }
                 }
 
@@ -214,12 +225,12 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        handler.postDelayed(runnable, 5000);        //
+        handler.postDelayed(runnable, 5000);
     }
 
     /**
      * asks for permission to draw over other apps if it's not already given
-     * is called when the app is first launcher
+     * is called when the app is first launched
      */
     public void checkOverlayPermission(){
 
@@ -229,6 +240,29 @@ public class MainActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                 startActivity(myIntent);
             }
+        }
+    }
+
+    /**
+     * Turns off the sound and puts the phone into do not disturb mode
+     */
+    public void takeAwaySound() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        checkSoundPermission();
+        audioManager.setStreamVolume(AudioManager.STREAM_RING, 0, 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+    }
+
+    /**
+     * asks for permission to turn off the sound (its actually the do not disturb mode)
+     * is always called when the app is launched for the first time.
+     */
+    public void checkSoundPermission() {
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted()) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+            startActivity(intent);
         }
     }
 
