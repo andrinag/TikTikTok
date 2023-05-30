@@ -245,9 +245,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     // TAKING AWAY SOUND
-                    if (youtubeTimer >= thirdWarningIgnored && youtubeTimer < fourthWarning && currentApp.equals(yt)
-                            || instagramTimer >= thirdWarningIgnored && instagramTimer < fourthWarning && currentApp.equals(instagram)||
-                            tiktokTimer >= thirdWarningIgnored && tiktokTimer < fourthWarning && currentApp.equals(tiktok)) {
+                    if (youtubeTimer >= thirdWarningIgnored && currentApp.equals(yt)
+                            || instagramTimer >= thirdWarningIgnored && currentApp.equals(instagram)||
+                            tiktokTimer >= thirdWarningIgnored  && currentApp.equals(tiktok)) {
                         // if they keep turning off the sound, the sound will be turned off every 5s
                         takeAwaySound();
                     }
