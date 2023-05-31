@@ -13,38 +13,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/goToSettingsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="go_to_settings"
-            android:text="@string/settings" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="196dp" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/main_screen" />
-
         <Switch
             android:id="@+id/trackingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lorem_ipsum" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="59dp" />
-
-        <TextView
-            android:id="@+id/timeView"
+        <Switch
+            android:id="@+id/youTubeSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="YouTube" />
+
+        <Switch
+            android:id="@+id/instagramSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instagram" />
+
+        <Switch
+            android:id="@+id/tikTokSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TikTok" />
 
     </LinearLayout>
 </FrameLayout>

@@ -1,28 +1,20 @@
 package com.example.tiktiktok;
 
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.provider.Settings;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,8 +23,6 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import androidx.core.view.GestureDetectorCompat;
-import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -40,12 +30,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.tiktiktok.databinding.ActivityMainBinding;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,6 +45,18 @@ public class MainActivity extends AppCompatActivity {
 
     Button goToSettingsButton;
     Switch trackingSwitch;
+
+    Switch youTubeSwitch;
+
+    Switch instagramSwitch;
+
+    Switch tikTokSwitch;
+
+    boolean instagramTracking = false;
+
+    boolean youTubeTracking = false;
+
+    boolean tikTokTracking = false;
     TextView timeView;
 
     String currentApp;
@@ -110,14 +107,60 @@ public class MainActivity extends AppCompatActivity {
 
         trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
 
+        instagramSwitch = (Switch) findViewById(R.id.instagramSwitch);
+        tikTokSwitch = (Switch) findViewById(R.id.tikTokSwitch);
+        youTubeSwitch = (Switch) findViewById(R.id.youTubeSwitch);
+
         handler = new Handler();
         youtubeTimer = 0;
         tiktokTimer = 0;
         instagramTimer = 0;
         currentApp = "nothing";
 
-        timeView = (TextView) findViewById(R.id.timeView);
-        timeView.setText("Click for starting the Timer");
+        // timeView = (TextView) findViewById(R.id.timeView);
+        // timeView.setText("Click for starting the Timer");
+
+        instagramSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            boolean isChecked = instagramSwitch.isChecked();
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    instagramTracking = true;
+                    System.out.println("Instagram Tracking");
+                } else {
+                    instagramTracking = false;
+                    handler.removeCallbacks(runnable);
+                }
+            }
+        });
+
+        youTubeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            boolean isChecked = youTubeSwitch.isChecked();
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    youTubeTracking = true;
+                    System.out.println("YouTube Tracking");
+                } else {
+                    youTubeTracking = false;
+                    handler.removeCallbacks(runnable);
+                }
+            }
+        });
+
+        tikTokSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            boolean isChecked = tikTokSwitch.isChecked();
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    tikTokTracking = true;
+                    System.out.println("Tiktok Tracking on");
+                } else {
+                    tikTokTracking = false;
+                    handler.removeCallbacks(runnable);
+                }
+            }
+        });
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = trackingSwitch.isChecked();
 
@@ -136,13 +179,13 @@ public class MainActivity extends AppCompatActivity {
         /**
          * Changing to the settings menu
          */
-        goToSettingsButton = findViewById(R.id.goToSettingsButton);
-        goToSettingsButton.setOnClickListener(new View.OnClickListener() {
+        //goToSettingsButton = findViewById(R.id.goToSettingsButton);
+        /** goToSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 switchActivities();
             }
-        });
+        }); **/
     }
 
     /**
@@ -199,11 +242,15 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // CONSEQUENCES
-                    if (youtubeTimer == firstWarning || instagramTimer == firstWarning || tiktokTimer == firstWarning) {
+                    if (youtubeTimer == firstWarning  && youTubeTracking
+                            || instagramTimer == firstWarning && instagramTracking
+                            || tiktokTimer == firstWarning && tikTokTracking) {
                         // showing a warning popup
                         createOverlay(R.layout.first_warning);
 
-                    } else if (youtubeTimer == secondWarning || instagramTimer == secondWarning || tiktokTimer == secondWarning) {
+                    } else if (youtubeTimer == secondWarning && youTubeTracking
+                            || instagramTimer == secondWarning && instagramTracking
+                            || tiktokTimer == secondWarning && tikTokTracking) {
                         // showing a warning popup
                         createOverlay(R.layout.second_warning);
 
@@ -211,18 +258,22 @@ public class MainActivity extends AppCompatActivity {
                         setScreenBrightness(0);
                         fullBrightness = true;
 
-                    } else if (youtubeTimer == thirdWarning || instagramTimer == thirdWarning || tiktokTimer == thirdWarning) {
+                    } else if (youtubeTimer == thirdWarning && youTubeTracking
+                            || instagramTimer == thirdWarning && instagramTracking
+                            || tiktokTimer == thirdWarning && tikTokTracking) {
                         // showing a warning popup
                         createOverlay(R.layout.third_warning);
                         takeAwaySound();
 
-                    } else if (youtubeTimer == fourthWarning || instagramTimer == fourthWarning || tiktokTimer == fourthWarning) {
+                    } else if (youtubeTimer == fourthWarning && youTubeTracking
+                            || instagramTimer == fourthWarning && instagramTracking
+                            || tiktokTimer == fourthWarning && tikTokTracking) {
                         // showing a warning popup
                         createOverlay(R.layout.fourth_warning);
 
-                    } else if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt)
-                            || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram)
-                            || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok)) {
+                    } else if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt) && youTubeTracking
+                            || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram) && instagramTracking
+                            || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok) && tikTokTracking) {
                         // If they keep ignoring the fourth warning and stay on the app, the warning keeps showing up every 5s
                         createOverlay(R.layout.app_block_layover);
                     }
@@ -232,9 +283,9 @@ public class MainActivity extends AppCompatActivity {
                     // ---------------------------------------------------------------------------------------- //
 
                     // ADJUSTING SCREEN BRIGHTNESS
-                    if (youtubeTimer >= secondWarning && currentApp.equals(yt)
-                            || instagramTimer >= secondWarning && currentApp.equals(instagram)
-                            || tiktokTimer >= secondWarning && currentApp.equals(tiktok)) {
+                    if (youtubeTimer >= secondWarning && currentApp.equals(yt) && youTubeTracking
+                            || instagramTimer >= secondWarning && currentApp.equals(instagram) && instagramTracking
+                            || tiktokTimer >= secondWarning && currentApp.equals(tiktok) && tikTokTracking) {
                         // changes the brightness to either full or max brightness every 5 seconds
                         if (fullBrightness) {
                             setScreenBrightness(0);
@@ -245,9 +296,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     // TAKING AWAY SOUND
-                    if (youtubeTimer >= thirdWarningIgnored && currentApp.equals(yt)
-                            || instagramTimer >= thirdWarningIgnored && currentApp.equals(instagram)||
-                            tiktokTimer >= thirdWarningIgnored  && currentApp.equals(tiktok)) {
+                    if (youtubeTimer >= thirdWarningIgnored && currentApp.equals(yt) && youTubeTracking
+                            || instagramTimer >= thirdWarningIgnored && currentApp.equals(instagram) && instagramTracking
+                            || tiktokTimer >= thirdWarningIgnored  && currentApp.equals(tiktok) && tikTokTracking) {
                         // if they keep turning off the sound, the sound will be turned off every 5s
                         takeAwaySound();
                     }
