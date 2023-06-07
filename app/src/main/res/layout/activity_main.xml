@@ -3,8 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#0B0B0B"
+    android:backgroundTint="#040404"
     android:fitsSystemWindows="true"
+    android:outlineAmbientShadowColor="#F8F0F0"
+    android:outlineSpotShadowColor="#EFE9E9"
     android:visibility="visible"
     tools:context=".MainActivity">
 
@@ -13,29 +17,101 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="181dp"
+            app:srcCompat="@drawable/tiktiktok_logo" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="82dp">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Switch
             android:id="@+id/trackingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lorem_ipsum" />
+            android:showText="false"
+            android:text="@string/lorem_ipsum"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#F8F5F5"
+            android:thumbTint="#E91E63"
+            android:trackTint="#00BCD4" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/InstagramTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FBF7F7" />
+
+        <TextView
+            android:id="@+id/YouTubeTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#F6F0F0" />
+
+        <TextView
+            android:id="@+id/TikTikTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#F8F3F3" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="67dp">
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Switch
             android:id="@+id/youTubeSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="YouTube" />
+            android:buttonTint="#404040"
+            android:text="YouTube"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FAF7F7"
+            android:thumbTint="#00BCD4"
+            android:trackTint="#E91E63" />
 
         <Switch
             android:id="@+id/instagramSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instagram" />
+            android:text="Instagram"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FFFCFC"
+            android:thumbTint="#00BCD4"
+            android:trackTint="#E91E63" />
 
         <Switch
             android:id="@+id/tikTokSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TikTok" />
+            android:text="TikTok"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FBF8F8"
+            android:thumbTint="#00BCD4"
+            android:trackTint="#E91E63" />
 
     </LinearLayout>
 </FrameLayout>

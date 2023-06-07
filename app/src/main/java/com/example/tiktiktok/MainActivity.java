@@ -4,6 +4,9 @@ import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -31,6 +34,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.tiktiktok.databinding.ActivityMainBinding;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,11 +56,26 @@ public class MainActivity extends AppCompatActivity {
 
     Switch tikTokSwitch;
 
-    boolean instagramTracking = false;
+    TextView YouTubeTime;
 
-    boolean youTubeTracking = false;
+    TextView InstagramTime;
 
-    boolean tikTokTracking = false;
+    TextView TikTikTime;
+
+    boolean instagramTracking;
+
+    boolean youTubeTracking;
+
+    boolean tikTokTracking;
+
+    String yt = "com.google.android.youtube";
+
+    String tiktok = "com.zhiliaoapp.musically";
+
+    String instagram = "com.instagram.android";
+
+
+
     TextView timeView;
 
     String currentApp;
@@ -101,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
 
         // used for the AppChecker
         context = this;
+
+        updateInstagramTimeGUI();
+        updateTikTokGUI();
+        updateYTTimeGUI();
 
         // checks if the permission has been given to display things over other apps
         checkOverlayPermission();
@@ -211,15 +234,17 @@ public class MainActivity extends AppCompatActivity {
      * start tracking the video content
      */
     private void startTracking() {
-        String yt = "com.google.android.youtube";
-        String tiktok = "com.zhiliaoapp.musically";
-        String instagram = "com.instagram.android";
 
         // checks every 5 seconds which app has been opened the longest in the last 5 seconds
         runnable = new Runnable() {
             @Override
             public void run() {
                 currentApp = ForegroundAppChecker.getForegroundApp(context);
+
+                updateInstagramTimeGUI();
+                updateTikTokGUI();
+                updateYTTimeGUI();
+
                 // calls the method which checks usage in last 5 seconds
 
                 // ---------------------------------------------- //
@@ -415,5 +440,32 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
         intent.setData(Uri.parse("package:" + getPackageName()));
         startActivity(intent);
+    }
+
+    private void updateInstagramTimeGUI() {
+        TextView InstagramTime = (TextView)findViewById(R.id.InstagramTime);
+        if (instagramTracking) {
+            InstagramTime.setText("Time spent on Instagram:   " + instagramTimer);
+        } else {
+            InstagramTime.setText("Instagram Tracking is not activated");
+        }
+    }
+
+    private void updateYTTimeGUI() {
+        TextView YouTubeTime = (TextView)findViewById(R.id.YouTubeTime);
+        if (youTubeTracking) {
+            YouTubeTime.setText("Time spent on YouTube:     " + youtubeTimer);
+        } else {
+            YouTubeTime.setText("YouTube Tracking is not activated");
+        }
+    }
+
+    private void updateTikTokGUI() {
+        TextView TikTikTime = (TextView)findViewById(R.id.TikTikTime);
+        if (tikTokTracking) {
+            TikTikTime.setText("Time spent on TikTok:      " + tiktokTimer);
+        } else {
+            TikTikTime.setText("TikTok Tracking is not activated");
+        }
     }
 }
