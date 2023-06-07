@@ -8,26 +8,36 @@
     android:background="@null">
 
     <androidx.cardview.widget.CardView
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="#090808"
         app:cardCornerRadius="5dp">
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/titleText"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
                 android:text="FOURTH AND FINAL WARNING"
+                android:textColor="#FAF1F1"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:padding="10dp"/>
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is the last warning. Close the app now or you wont be able to use the app for now"
+                android:textAlignment="center"
+                android:textColor="#F8F0F0" />
 
             <Button
                 android:id="@+id/window_close"

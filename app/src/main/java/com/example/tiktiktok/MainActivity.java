@@ -442,9 +442,57 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /** private void updateInstagramTimeGUI() {
+        TextView InstagramTime = (TextView)findViewById(R.id.InstagramTime);
+        if (instagramTracking) {
+            if (instagramTimer < 60) {
+                InstagramTime.setTextColor(getResources().getColor(R.color.white));
+                InstagramTime.setText("Time spent on Instagram:      " + "> 1 min");
+            }
+            InstagramTime.setTextColor(getResources().getColor(R.color.white));
+            InstagramTime.setText("Time spent on TikTok:      " + instagramTimer);
+        } else {
+            InstagramTime.setTextColor(getResources().getColor(R.color.purple_200));
+            InstagramTime.setText("Instagram Tracking is not activated");
+        }
+    }
+
+    private void updateYTTimeGUI() {
+        TextView YouTubeTime = (TextView)findViewById(R.id.YouTubeTime);
+        if (youTubeTracking) {
+            if (youtubeTimer < 60) {
+                YouTubeTime.setTextColor(getResources().getColor(R.color.white));
+                YouTubeTime.setText("Time spent on YouTube:      " + "> 1 min");
+            }
+            YouTubeTime.setTextColor(getResources().getColor(R.color.white));
+            YouTubeTime.setText("Time spent on YouTube:      " + youtubeTimer);
+        } else {
+            YouTubeTime.setTextColor(getResources().getColor(R.color.purple_200));
+            YouTubeTime.setText("YouTube Tracking is not activated");
+        }
+    }
+
+    private void updateTikTokGUI() {
+        TextView TikTikTime = (TextView)findViewById(R.id.TikTikTime);
+        if (tikTokTracking) {
+            if (tiktokTimer < 60) {
+                TikTikTime.setTextColor(getResources().getColor(R.color.white));
+                TikTikTime.setText("Time spent on TikTok:      " + "> 1 min");
+            }
+            TikTikTime.setTextColor(getResources().getColor(R.color.white));
+            TikTikTime.setText("Time spent on TikTok:      " + tiktokTimer);
+        } else {
+            TikTikTime.setTextColor(getResources().getColor(R.color.purple_200));
+            TikTikTime.setText("TikTok Tracking is not activated");
+        }
+    }**/
+
     private void updateInstagramTimeGUI() {
         TextView InstagramTime = (TextView)findViewById(R.id.InstagramTime);
         if (instagramTracking) {
+            if (instagramTimer < 60) {
+                InstagramTime.setText("Time spent on Instagram:   " + "> 1 min");
+            }
             InstagramTime.setText("Time spent on Instagram:   " + instagramTimer);
         } else {
             InstagramTime.setText("Instagram Tracking is not activated");
@@ -454,6 +502,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateYTTimeGUI() {
         TextView YouTubeTime = (TextView)findViewById(R.id.YouTubeTime);
         if (youTubeTracking) {
+            if (youtubeTimer < 60) {
+                YouTubeTime.setText("Time spent on YouTube     " + "> 1 min");
+            }
             YouTubeTime.setText("Time spent on YouTube:     " + youtubeTimer);
         } else {
             YouTubeTime.setText("YouTube Tracking is not activated");
@@ -463,6 +514,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateTikTokGUI() {
         TextView TikTikTime = (TextView)findViewById(R.id.TikTikTime);
         if (tikTokTracking) {
+            if (tiktokTimer < 60) {
+                TikTikTime.setText("Time spent on TikTok:      " + " > 1 min ");
+            }
             TikTikTime.setText("Time spent on TikTok:      " + tiktokTimer);
         } else {
             TikTikTime.setText("TikTok Tracking is not activated");

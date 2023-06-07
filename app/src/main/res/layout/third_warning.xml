@@ -8,16 +8,17 @@
     android:background="@null">
 
     <androidx.cardview.widget.CardView
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="#090808"
         app:cardCornerRadius="5dp">
 
         <LinearLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/titleText"
@@ -25,9 +26,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="10dp"
-                android:text="TAKING AWAY SOUND"
+                android:text="THIRD WARNING"
+                android:textColor="#FDF1F1"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is the third warning. Please close the app. The sound will be taken away from now on. "
+                android:textAlignment="center"
+                android:textColor="#F6ECEC" />
 
             <Button
                 android:id="@+id/window_close"
