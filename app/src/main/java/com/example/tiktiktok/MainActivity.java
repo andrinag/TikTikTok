@@ -267,15 +267,15 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // CONSEQUENCES
-                    if (youtubeTimer == firstWarning  && youTubeTracking
-                            || instagramTimer == firstWarning && instagramTracking
-                            || tiktokTimer == firstWarning && tikTokTracking) {
+                    if (youtubeTimer == firstWarning  && youTubeTracking && currentApp.equals(yt)
+                            || instagramTimer == firstWarning && instagramTracking && currentApp.equals(instagram)
+                            || tiktokTimer == firstWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.first_warning);
 
-                    } else if (youtubeTimer == secondWarning && youTubeTracking
-                            || instagramTimer == secondWarning && instagramTracking
-                            || tiktokTimer == secondWarning && tikTokTracking) {
+                    } else if (youtubeTimer == secondWarning && youTubeTracking && currentApp.equals(yt)
+                            || instagramTimer == secondWarning && instagramTracking && currentApp.equals(instagram)
+                            || tiktokTimer == secondWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.second_warning);
 
@@ -283,16 +283,16 @@ public class MainActivity extends AppCompatActivity {
                         setScreenBrightness(0);
                         fullBrightness = true;
 
-                    } else if (youtubeTimer == thirdWarning && youTubeTracking
-                            || instagramTimer == thirdWarning && instagramTracking
-                            || tiktokTimer == thirdWarning && tikTokTracking) {
+                    } else if (youtubeTimer == thirdWarning && youTubeTracking && currentApp.equals(yt)
+                            || instagramTimer == thirdWarning && instagramTracking && currentApp.equals(instagram)
+                            || tiktokTimer == thirdWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.third_warning);
                         takeAwaySound();
 
-                    } else if (youtubeTimer == fourthWarning && youTubeTracking
-                            || instagramTimer == fourthWarning && instagramTracking
-                            || tiktokTimer == fourthWarning && tikTokTracking) {
+                    } else if (youtubeTimer == fourthWarning && youTubeTracking && currentApp.equals(yt)
+                            || instagramTimer == fourthWarning && instagramTracking && currentApp.equals(instagram)
+                            || tiktokTimer == fourthWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.fourth_warning);
 

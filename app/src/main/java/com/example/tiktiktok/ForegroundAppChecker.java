@@ -50,6 +50,7 @@ public class ForegroundAppChecker {
                     foregroundApp = recentUsage.getPackageName();
                 }
             } else {
+                System.out.println("S HETT NULL ERKENNT ALS APP");
                 foregroundApp = lastOpenedApp;      // if the most used app is "null" set it to the one opened before
             }
         }
