@@ -94,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
     // time limits when the warnings are being executed
     // ------------------------------------------------- //
     public static int firstWarning = 10;
-    public static int secondWarning = 25;
-    public static int thirdWarning = 45;
-    public static int fourthWarning = 100;
+    public static int secondWarning = 15;
+    public static int thirdWarning = 20;
+    public static int fourthWarning = 25;
 
     public static int thirdWarningIgnored = thirdWarning + 5;
 

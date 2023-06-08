@@ -34,7 +34,9 @@
                     android:id="@+id/imageView"
                     android:layout_width="406dp"
                     android:layout_height="436dp"
-                    app:srcCompat="@drawable/tiktiktok_logo" />
+                    app:srcCompat="@drawable/tiktok_logo_big"
+                    android:layout_gravity="center"
+                    />
             </FrameLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
