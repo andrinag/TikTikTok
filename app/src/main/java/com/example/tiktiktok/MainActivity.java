@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private Context context;
     private boolean fullBrightness = false;
 
-    Button goToSettingsButton;
     Switch trackingSwitch;
 
     Switch youTubeSwitch;
@@ -57,11 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     Switch tikTokSwitch;
 
-    TextView YouTubeTime;
-
-    TextView InstagramTime;
-
-    TextView TikTikTime;
 
     boolean instagramTracking;
 
@@ -75,9 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
     String instagram = "com.instagram.android";
 
-
-
-    TextView timeView;
 
     String currentApp;
 
@@ -101,17 +92,15 @@ public class MainActivity extends AppCompatActivity {
     public static int thirdWarningIgnored = thirdWarning + 5;
 
     public static int fourthWarningIgnored = fourthWarning + 5;
-
-    private int brightness;
-
     // ------------------------------------------------- //
-
 
     boolean trackingAllowed = false;
 
-    public MainActivity() throws FileNotFoundException {
-    }
 
+    /**
+     * gets called when the app is opened
+     * @param savedInstanceState data to reload UI state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,28 +108,30 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // used for the AppChecker
-        context = this;
+        context = this;     // used in some methods
 
         updateInstagramTimeGUI();
         updateTikTokGUI();
         updateYTTimeGUI();
 
-        // checks if the permission has been given to display things over other apps
+        // checking permissions and may open windows to let the user give those permissions
         checkOverlayPermission();
+        requestWriteSettingsPermission();
 
-        trackingSwitch = (Switch) findViewById(R.id.trackingSwitch);
-
-        instagramSwitch = (Switch) findViewById(R.id.instagramSwitch);
-        tikTokSwitch = (Switch) findViewById(R.id.tikTokSwitch);
-        youTubeSwitch = (Switch) findViewById(R.id.youTubeSwitch);
+        // --------------------------------------------------- //
+        //  getting the switches and setting them to inactive
+        // --------------------------------------------------- //
+        trackingSwitch = findViewById(R.id.trackingSwitch);
+        instagramSwitch = findViewById(R.id.instagramSwitch);
+        tikTokSwitch = findViewById(R.id.tikTokSwitch);
+        youTubeSwitch = findViewById(R.id.youTubeSwitch);
         instagramSwitch.setClickable(false);
         tikTokSwitch.setClickable(false);
         youTubeSwitch.setClickable(false);
         youTubeSwitch.setAlpha(0.5f);
         tikTokSwitch.setAlpha(0.5f);
         instagramSwitch.setAlpha(0.5f);
-
+        // --------------------------------------------------- //
 
         handler = new Handler();
         youtubeTimer = 0;
@@ -148,11 +139,10 @@ public class MainActivity extends AppCompatActivity {
         instagramTimer = 0;
         currentApp = "nothing";
 
+        // needed in the ForegroundAppChecker class
         ForegroundAppChecker.createUsageStatsManager(this);
 
-        // timeView = (TextView) findViewById(R.id.timeView);
-        // timeView.setText("Click for starting the Timer");
-
+        // setting what the instagramSwitch does
         instagramSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = instagramSwitch.isChecked();
             @Override
@@ -169,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // setting what the youtubeSwitch does
         youTubeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = youTubeSwitch.isChecked();
             @Override
@@ -184,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // setting what the tikTokSwitch does
         tikTokSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = tikTokSwitch.isChecked();
             @Override
@@ -198,6 +190,9 @@ public class MainActivity extends AppCompatActivity {
                 updateTikTokGUI();
             }
         });
+
+        // setting what the trackingSwitch does
+        // used to start/stop tracking
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = trackingSwitch.isChecked();
 
@@ -214,9 +209,9 @@ public class MainActivity extends AppCompatActivity {
                     instagramSwitch.setAlpha(1);
                 } else {
                     trackingAllowed = false;
-                    handler.removeCallbacks(runnable);      // thread oder wases esch abschalte
+                    handler.removeCallbacks(runnable);      // terminate thread
 
-                    // switching off the app switches
+                    // deactivating the app switches
                     youTubeSwitch.setChecked(false);
                     instagramSwitch.setChecked(false);
                     tikTokSwitch.setChecked(false);
@@ -231,25 +226,13 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        /**
-         * Changing to the settings menu
-         */
-        //goToSettingsButton = findViewById(R.id.goToSettingsButton);
-        /** goToSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switchActivities();
-            }
-        }); **/
     }
 
-    /**
-     * was automatically added by android studio. Don't know what it is.
-     * @return
-     */
+
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        NavController navController = Navigation.findNavController
+                (this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
@@ -267,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void startTracking() {
 
-        // checks every 5 seconds which app has been opened the longest in the last 5 seconds
+        // checks every 5 seconds which app has been opened last in the last 5 seconds
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -281,9 +264,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // ---------------------------------------------- //
-                // USED FOR TESTING
+                // USED FOR TESTING & DEBUGGING
                 // ---------------------------------------------- //
-                System.out.println("MOMENTAN: " + currentApp);
+                System.out.println("CURRENT APP: " + currentApp);
                 // ---------------------------------------------- //
 
                 // depending on which app is currently used a timer will be increased
@@ -299,13 +282,19 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("INSTAGRAM: " + instagramTimer);
                     }
 
-                    // CONSEQUENCES
+                    // ----------------------------------------------------------- //
+                    // executing warnings if thresholds have been reached exactly
+                    // normally consist of a simple popup
+                    // ----------------------------------------------------------- //
+
+                    // first warning has been reached
                     if (youtubeTimer == firstWarning  && youTubeTracking && currentApp.equals(yt)
                             || instagramTimer == firstWarning && instagramTracking && currentApp.equals(instagram)
                             || tiktokTimer == firstWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.first_warning);
 
+                    // second warning has been reached
                     } else if (youtubeTimer == secondWarning && youTubeTracking && currentApp.equals(yt)
                             || instagramTimer == secondWarning && instagramTracking && currentApp.equals(instagram)
                             || tiktokTimer == secondWarning && tikTokTracking && currentApp.equals(tiktok)) {
@@ -316,6 +305,7 @@ public class MainActivity extends AppCompatActivity {
                         setScreenBrightness(0);
                         fullBrightness = true;
 
+                    // third warning has been reached
                     } else if (youtubeTimer == thirdWarning && youTubeTracking && currentApp.equals(yt)
                             || instagramTimer == thirdWarning && instagramTracking && currentApp.equals(instagram)
                             || tiktokTimer == thirdWarning && tikTokTracking && currentApp.equals(tiktok)) {
@@ -323,22 +313,18 @@ public class MainActivity extends AppCompatActivity {
                         createOverlay(R.layout.third_warning);
                         takeAwaySound();
 
+                    // fourth warning has been reached
                     } else if (youtubeTimer == fourthWarning && youTubeTracking && currentApp.equals(yt)
                             || instagramTimer == fourthWarning && instagramTracking && currentApp.equals(instagram)
                             || tiktokTimer == fourthWarning && tikTokTracking && currentApp.equals(tiktok)) {
                         // showing a warning popup
                         createOverlay(R.layout.fourth_warning);
 
-                    } else if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt) && youTubeTracking
-                            || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram) && instagramTracking
-                            || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok) && tikTokTracking) {
-                        // If they keep ignoring the fourth warning and stay on the app, the warning keeps showing up every 5s
-                        createOverlay(R.layout.app_block_layover);
                     }
 
-                    // ---------------------------------------------------------------------------------------- //
-                    // if statements which have to be checked separately each time since they happen repeatedly
-                    // ---------------------------------------------------------------------------------------- //
+                    // ------------------------------------------------------------------------------- //
+                    // warnings which keep executing every 5 seconds after threshold has been reached
+                    // ------------------------------------------------------------------------------- //
 
                     // ADJUSTING SCREEN BRIGHTNESS
                     if (youtubeTimer >= secondWarning && currentApp.equals(yt) && youTubeTracking
@@ -361,9 +347,16 @@ public class MainActivity extends AppCompatActivity {
                         takeAwaySound();
                     }
 
+                    if (youtubeTimer >= fourthWarningIgnored && currentApp.equals(yt) && youTubeTracking
+                            || instagramTimer >= fourthWarningIgnored && currentApp.equals(instagram) && instagramTracking
+                            || tiktokTimer >= fourthWarningIgnored && currentApp.equals(tiktok) && tikTokTracking) {
+                        // If they keep ignoring the fourth warning and stay on the app, the warning keeps showing up every 5s
+                        createOverlay(R.layout.app_block_layover);
+                    }
+
                 }
 
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 5000);        // time to wait until loop starts again
             }
         };
 
@@ -442,86 +435,57 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
+    /**
+     * used to change the screen brightness of the device
+     * @param brightnessValue the desired brightness; must be between 0 and 255
+     *
+     * This method was done with some help from chatGPT
+     **/
     public void setScreenBrightness(int brightnessValue) {
-        ContentResolver contentResolver = getContentResolver();
+        ContentResolver cR = getContentResolver();
         Window window = getWindow();
-
-        if (Settings.System.canWrite(this)) {
-            // For Android 6.0 and later
-            writeBrightnessSettings(contentResolver, brightnessValue);
-            applyBrightness(window, brightnessValue);
-        } else {
-            // Request the WRITE_SETTINGS permission
-            requestWriteSettingsPermission();
-        }
+         writeBrightnessSettings(cR, brightnessValue);
+         applyBrightness(window, brightnessValue);
     }
 
+    /**
+     * helper function for setScreenBrightness
+     * @param contentResolver as taken from the setScreenBrightness method
+     * @param brightnessValue the desired brightness; must be between 0 and 255
+     */
     private void writeBrightnessSettings(ContentResolver contentResolver, int brightnessValue) {
         Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, brightnessValue);
     }
 
+    /**
+     * helper function for setScreenBrightness
+     * @param window current open window
+     * @param brightnessValue desired brightness; must be between 0 and 255
+     */
     private void applyBrightness(Window window, int brightnessValue) {
         WindowManager.LayoutParams layoutParams = window.getAttributes();
         layoutParams.screenBrightness = brightnessValue / 255f;
         window.setAttributes(layoutParams);
     }
 
+    /**
+     * requesting ACTION_MANAGE_WRITE_SETTINGS permission
+     * used for changing the brightness
+     */
     private void requestWriteSettingsPermission() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-        intent.setData(Uri.parse("package:" + getPackageName()));
-        startActivity(intent);
-    }
-
-    /** private void updateInstagramTimeGUI() {
-        TextView InstagramTime = (TextView)findViewById(R.id.InstagramTime);
-        if (instagramTracking) {
-            if (instagramTimer < 60) {
-                InstagramTime.setTextColor(getResources().getColor(R.color.white));
-                InstagramTime.setText("Time spent on Instagram:      " + "> 1 min");
-            }
-            InstagramTime.setTextColor(getResources().getColor(R.color.white));
-            InstagramTime.setText("Time spent on TikTok:      " + instagramTimer);
-        } else {
-            InstagramTime.setTextColor(getResources().getColor(R.color.purple_200));
-            InstagramTime.setText("Instagram Tracking is not activated");
+        if (!Settings.System.canWrite(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         }
     }
 
-    private void updateYTTimeGUI() {
-        TextView YouTubeTime = (TextView)findViewById(R.id.YouTubeTime);
-        if (youTubeTracking) {
-            if (youtubeTimer < 60) {
-                YouTubeTime.setTextColor(getResources().getColor(R.color.white));
-                YouTubeTime.setText("Time spent on YouTube:      " + "> 1 min");
-            }
-            YouTubeTime.setTextColor(getResources().getColor(R.color.white));
-            YouTubeTime.setText("Time spent on YouTube:      " + youtubeTimer);
-        } else {
-            YouTubeTime.setTextColor(getResources().getColor(R.color.purple_200));
-            YouTubeTime.setText("YouTube Tracking is not activated");
-        }
-    }
-
-    private void updateTikTokGUI() {
-        TextView TikTikTime = (TextView)findViewById(R.id.TikTikTime);
-        if (tikTokTracking) {
-            if (tiktokTimer < 60) {
-                TikTikTime.setTextColor(getResources().getColor(R.color.white));
-                TikTikTime.setText("Time spent on TikTok:      " + "> 1 min");
-            }
-            TikTikTime.setTextColor(getResources().getColor(R.color.white));
-            TikTikTime.setText("Time spent on TikTok:      " + tiktokTimer);
-        } else {
-            TikTikTime.setTextColor(getResources().getColor(R.color.purple_200));
-            TikTikTime.setText("TikTok Tracking is not activated");
-        }
-    }**/
-
+    /**
+     * updating the in-app GUI regarding the Instagram timer
+     */
     private void updateInstagramTimeGUI() {
-        TextView InstagramTime = (TextView)findViewById(R.id.InstagramTime);
+        TextView InstagramTime = findViewById(R.id.InstagramTime);
         if (instagramTracking) {
             if (instagramTimer < 60) {
                 InstagramTime.setText("Time spent on Instagram:   " + "> 1 min");
@@ -532,8 +496,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * updating the in-app GUI regarding the YouTube timer
+     */
     private void updateYTTimeGUI() {
-        TextView YouTubeTime = (TextView)findViewById(R.id.YouTubeTime);
+        TextView YouTubeTime = findViewById(R.id.YouTubeTime);
         if (youTubeTracking) {
             if (youtubeTimer < 60) {
                 YouTubeTime.setText("Time spent on YouTube     " + "> 1 min");
@@ -544,8 +511,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * updating the in-app GUI regarding the TikTok timer
+     */
     private void updateTikTokGUI() {
-        TextView TikTikTime = (TextView)findViewById(R.id.TikTikTime);
+        TextView TikTikTime = findViewById(R.id.TikTikTime);
         if (tikTokTracking) {
             if (tiktokTimer < 60) {
                 TikTikTime.setText("Time spent on TikTok:      " + " > 1 min ");

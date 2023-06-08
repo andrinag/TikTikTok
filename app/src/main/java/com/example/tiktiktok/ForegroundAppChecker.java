@@ -14,6 +14,9 @@ import java.util.List;
  * Contains a method which checks which app has been used the most in the last 5 seconds
  * uses USAGE_STATS_SERVICE, permission also needs to be manually given to
  * the app by the user ("Zugriff auf Nutzungsdaten")
+ *
+ * The main idea and some of the structure of this class was done with ChatGPT but were
+ * modified and expanded by us
  */
 public class ForegroundAppChecker {
 
@@ -21,7 +24,9 @@ public class ForegroundAppChecker {
     static UsageStatsManager usageStatsManager;
 
     /**
-     * used to set the UsageStatsManager when the app first starts up (oncreate() in MainActivity.java)
+     * used to set the UsageStatsManager (used in the getForegroundApp() method) when the
+     * app first starts up
+     * should be done in oncreate() in MainActivity.java
      * @param context "this" can be used as a context in MainActivity.java
      */
     public static void createUsageStatsManager(Context context) {
@@ -30,7 +35,7 @@ public class ForegroundAppChecker {
 
     /**
      * checks which app has been used last the past 5 seconds
-     * @return String of the name of the app with the most usage
+     * @return String of the name of the app which has been used last
      */
     public static String getForegroundApp() {
         String foregroundApp = null;
@@ -39,31 +44,30 @@ public class ForegroundAppChecker {
             long currentTime = System.currentTimeMillis();
 
             // Get the usage stats of the last 5 seconds
-            List<UsageStats> usageStatsList = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_BEST, currentTime - 5000, currentTime);
+            List<UsageStats> usageStatsList = usageStatsManager.queryUsageStats
+                    (UsageStatsManager.INTERVAL_BEST, currentTime - 5000, currentTime);
 
             if (usageStatsList != null && !usageStatsList.isEmpty()) {
                 // Find the app with the most recent usage
                 UsageStats recentUsage = null;
                 for (UsageStats usageStats : usageStatsList) {
-                    if (recentUsage == null || usageStats.getLastTimeUsed() > recentUsage.getLastTimeUsed()) {
+                    if (recentUsage == null ||
+                            usageStats.getLastTimeUsed() > recentUsage.getLastTimeUsed()) {
                         recentUsage = usageStats;
                     }
                 }
 
                 if (recentUsage != null) {
-                    // Get the package name of the foreground app
+                    // save the package name of the app last recently accessed
                     foregroundApp = recentUsage.getPackageName();
                 }
             } else {
-                System.out.println("USAGESTATSLIST ESCH LEER");
-                foregroundApp = lastOpenedApp;      // if the most used app is "null" set it to the one opened before
+                // if the last accessed app is "null" set it to the one from 5 seconds ago
+                foregroundApp = lastOpenedApp;
             }
-        } else {
-            System.out.println("usageStatsManager esch null");
         }
 
-        lastOpenedApp = foregroundApp;          // set the lastOpenedApp to the one currently most used
-        System.out.println(foregroundApp);
+        lastOpenedApp = foregroundApp;      // set the lastOpenedApp to the one currently last used
         return foregroundApp;
     }
 
