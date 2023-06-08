@@ -140,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         instagramTimer = 0;
         currentApp = "nothing";
 
+        ForegroundAppChecker.createUsageStatsManager(this);
+
         // timeView = (TextView) findViewById(R.id.timeView);
         // timeView.setText("Click for starting the Timer");
 
@@ -239,13 +241,14 @@ public class MainActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                currentApp = ForegroundAppChecker.getForegroundApp(context);
+
+                // calls the method which checks usage in last 5 seconds
+                currentApp = ForegroundAppChecker.getForegroundApp();
 
                 updateInstagramTimeGUI();
                 updateTikTokGUI();
                 updateYTTimeGUI();
 
-                // calls the method which checks usage in last 5 seconds
 
                 // ---------------------------------------------- //
                 // USED FOR TESTING
