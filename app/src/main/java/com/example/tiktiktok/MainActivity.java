@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -133,6 +134,10 @@ public class MainActivity extends AppCompatActivity {
         instagramSwitch = (Switch) findViewById(R.id.instagramSwitch);
         tikTokSwitch = (Switch) findViewById(R.id.tikTokSwitch);
         youTubeSwitch = (Switch) findViewById(R.id.youTubeSwitch);
+        instagramSwitch.setClickable(false);
+        tikTokSwitch.setClickable(false);
+        youTubeSwitch.setClickable(false);
+
 
         handler = new Handler();
         youtubeTimer = 0;
@@ -156,6 +161,8 @@ public class MainActivity extends AppCompatActivity {
                     instagramTracking = false;
                     handler.removeCallbacks(runnable);
                 }
+                updateInstagramTimeGUI();
+
             }
         });
 
@@ -170,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     youTubeTracking = false;
                     handler.removeCallbacks(runnable);
                 }
+                updateYTTimeGUI();
             }
         });
 
@@ -184,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     tikTokTracking = false;
                     handler.removeCallbacks(runnable);
                 }
+                updateTikTokGUI();
             }
         });
         trackingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -194,11 +203,23 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) {
                     trackingAllowed = true;
                     startTracking();
+                    youTubeSwitch.setClickable(true);
+                    instagramSwitch.setClickable(true);
+                    tikTokSwitch.setClickable(true);
                 } else {
                     trackingAllowed = false;
                     handler.removeCallbacks(runnable);      // thread oder wases esch abschalte
+
+                    // switching off the app switches
+                    youTubeSwitch.setChecked(false);
+                    instagramSwitch.setChecked(false);
+                    tikTokSwitch.setChecked(false);
+                    youTubeSwitch.setClickable(false);
+                    instagramSwitch.setClickable(false);
+                    tikTokSwitch.setClickable(false);
                 }
             }
+
         });
 
         /**
