@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity {
         instagramSwitch.setClickable(false);
         tikTokSwitch.setClickable(false);
         youTubeSwitch.setClickable(false);
+        youTubeSwitch.setAlpha(0.5f);
+        tikTokSwitch.setAlpha(0.5f);
+        instagramSwitch.setAlpha(0.5f);
 
 
         handler = new Handler();
@@ -206,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
                     youTubeSwitch.setClickable(true);
                     instagramSwitch.setClickable(true);
                     tikTokSwitch.setClickable(true);
+                    youTubeSwitch.setAlpha(1);
+                    tikTokSwitch.setAlpha(1);
+                    instagramSwitch.setAlpha(1);
                 } else {
                     trackingAllowed = false;
                     handler.removeCallbacks(runnable);      // thread oder wases esch abschalte
@@ -217,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
                     youTubeSwitch.setClickable(false);
                     instagramSwitch.setClickable(false);
                     tikTokSwitch.setClickable(false);
+                    youTubeSwitch.setAlpha(0.5f);
+                    tikTokSwitch.setAlpha(0.5f);
+                    instagramSwitch.setAlpha(0.5f);
                 }
             }
 
