@@ -11,6 +11,10 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.tiktiktok.databinding.FragmentSecondBinding;
 
+
+/**
+ * Whole class was automatically created by android studio. Is used for creating views etc.
+ */
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;

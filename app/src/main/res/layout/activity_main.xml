@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:showText="false"
-            android:text="@string/lorem_ipsum"
+            android:text="Start Time Tracking: "
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#F8F5F5"
             android:thumbTint="#E91E63"

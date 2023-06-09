@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
     // ------------------------------------------------- //
     // time limits when the warnings are being executed
     // ------------------------------------------------- //
-    public static int firstWarning = 10;
-    public static int secondWarning = 15;
-    public static int thirdWarning = 20;
-    public static int fourthWarning = 25;
+    public static int firstWarning = 15;
+    public static int secondWarning = 30;
+    public static int thirdWarning =45;
+    public static int fourthWarning = 60;
 
     public static int thirdWarningIgnored = thirdWarning + 5;
 
@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
         // needed in the ForegroundAppChecker class
         ForegroundAppChecker.createUsageStatsManager(this);
 
-        // setting what the instagramSwitch does
+        /**
+         * Listener for the Instagram Settings button. (Should the Tracking be allow?)
+         */
         instagramSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = instagramSwitch.isChecked();
             @Override
@@ -159,7 +161,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // setting what the youtubeSwitch does
+        /**
+         * Listener for the YouTube Settings button. (Should the Tracking be allow?)
+         */
         youTubeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = youTubeSwitch.isChecked();
             @Override
@@ -175,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // setting what the tikTokSwitch does
+        /**
+         * Listener for the TikTok Settings button. (Should the Tracking be allow?)
+         */
         tikTokSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             boolean isChecked = tikTokSwitch.isChecked();
             @Override
@@ -228,7 +234,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Was automatically added by android studio in the example project.
+     * Handles the click events.
+     * @return
+     */
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController
