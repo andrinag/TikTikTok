@@ -53,15 +53,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/InstagramTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="#FBF7F7" />
-
-        <TextView
             android:id="@+id/YouTubeTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,6 +60,15 @@
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="#F6F0F0" />
+
+        <TextView
+            android:id="@+id/InstagramTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="#FBF7F7" />
 
         <TextView
             android:id="@+id/TikTikTime"
