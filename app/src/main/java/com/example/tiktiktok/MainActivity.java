@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Instagram Tracking");
                 } else {
                     instagramTracking = false;
-                    handler.removeCallbacks(runnable);
                 }
                 updateInstagramTimeGUI();
 
@@ -177,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("YouTube Tracking");
                 } else {
                     youTubeTracking = false;
-                    handler.removeCallbacks(runnable);
                 }
                 updateYTTimeGUI();
             }
@@ -195,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Tiktok Tracking on");
                 } else {
                     tikTokTracking = false;
-                    handler.removeCallbacks(runnable);
                 }
                 updateTikTokGUI();
             }
