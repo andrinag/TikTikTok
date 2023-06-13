@@ -13,3 +13,4 @@ For TikTikTok to work the following permissions need to be manually given in the
 - access usage data 
 - show over other apps
 - change system settings
+- allow access in Do Not Disturb mode
